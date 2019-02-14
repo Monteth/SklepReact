@@ -8,37 +8,42 @@ class Header extends Component {
         searchString: ""
     }
 
-    searchForSoftware(event) {
-        const {name, value} = event.target
-        this.setState({
-            searchRedirect: true
-        })
-        console.log("request redirect")
-    }
 
     handleChange = (event) => {
         const {name, value} = event.target
         this.setState({
-            searchString: value,
-            searchRedirect: true
+            searchString: value
         })
-        console.log("save searchString")
     }
 
-    submitForm() {
 
-        // this.props.history.push({pathname: '/apps', state: {searchString: this.state.searchString}})
-        return <Link to={{
-            pathname: '/apps',
-            searchString: this.state.searchString
-        }}/>
+    loadLink = () => {
+        console.log("loadLink")
+        return <Link
+            to={
+                {
+                    pathname: '/apps',
+                    searchString: this.state.searchString
+                }
+            }/>
+    }
+
+    keyPress = (event) => {
+        if(event.key === 'Enter'){
+            console.log('enter press here! ')
+            this.setState({searchRedirect: true})
+        }
     }
 
     render() {
         return (
             <div>
-
-                {/*{this.state.searchRedirect ? <Link to={{pathname: '/apps', state: this.state.searchString}}/> : null}*/}
+                {this.state.searchRedirect ? <Redirect to={
+                    {
+                        pathname: '/apps',
+                        searchString: this.state.searchString
+                    }
+                }/> : null}
                 <header className="navi">" "
                     <div className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 
@@ -58,16 +63,15 @@ class Header extends Component {
                                     <NavLink className="nav-link" to="/account">Konto</NavLink>
                                 </li>
                             </ul>
-                            <form className="form-inline"  onSubmit={this.submitForm}>
+                            <div className="form-inline">
                                 <input
-                                    onKeyDown={(event) => (event.keyCode === 13) ? this.form.submit() : null }
+                                    onKeyPress={this.keyPress}
                                     size="25"
                                     name="name"
                                     className="form-control mr-sm-2"
                                     type="text"
                                     onChange={this.handleChange}
                                     placeholder="..."/>
-                                    <button type="submit">Szuk</button>
                                 <Link className="btn btn-outline-success my-2 my-sm-0"
                                       to={
                                           {
@@ -77,7 +81,7 @@ class Header extends Component {
                                       }>
                                     Szukaj
                                 </Link>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </header>
